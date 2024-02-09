@@ -1,0 +1,21 @@
+SRCE Engine Docs
+explanation of .eyn files
+-------------------------------
+commands:
+TITLE (Switch to title)
+RLBUF (Render Level Buffer)
+NAME (Set Level Name)
+LWDTH (Level Width)
+LHGHT (Level Height)
+XSTRT (Player start x)
+YSTRT (Player start y)
+SCRED (Start Credits)
+RBOOT (Reboot Game)
+-------------------------------
+buffers:
+MBFER (Contains All Levels - Map Buffer)
+LBFER (A Level Buffer)
+LWALL (Level Wall Textures)
+WHGHT (Wall Height)
+WTYPE (Wall Type Texture)
+END (Closes The Buffer)

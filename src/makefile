@@ -8,7 +8,8 @@ LCARG = -lSDL2
 #	universal
 ENTRY = Main
 OUT = ../bin
-
+DEMO = demo
+DOUT = C:/SRCE/
 #================== COMPILE ===================#
 # clean then build for all platforms 
 all: clean windows linux
@@ -22,9 +23,17 @@ clean:
 		mkdir $(OUT)/; \
 	fi;
 	echo "Cleaned"
+	if [ -d $(DOUT) ]; then \
+		rm $(DOUT)/*; \
+		rmdir $(DOUT)/; \
+		mkdir $(DOUT)/; \
+	else \
+		mkdir $(DOUT)/; \
+	fi;
 windows:
 	echo "Building for Windows..."
 	$(WCC) $(ENTRY).c -o $(OUT)/$(ENTRY).exe $(WCARG)
+	cp ../game/$(DEMO).eyn $(DOUT)/$(DEMO).eyn
 linux:
 	echo "Building for Linux/RPI..."
 	$(LCC) $(ENTRY).c -o $(OUT)/$(ENTRY) $(LCARG)

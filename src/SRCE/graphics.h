@@ -35,6 +35,9 @@ void line(int x1, int y1, int x2, int y2, int color){
     SDL_SetRenderDrawColor(gameRenderer,colorPalette[color][0],colorPalette[color][1],colorPalette[color][2],SDL_ALPHA_OPAQUE);
     SDL_RenderDrawLine(gameRenderer,x1,y1,x2,y2);
 }
+void textured_line(){
+    // later
+}
 void quit(){
     SDL_DestroyWindow(gameWindow);
     SDL_Quit();

@@ -35,8 +35,25 @@ void line(int x1, int y1, int x2, int y2, int color){
     SDL_SetRenderDrawColor(gameRenderer,colorPalette[color][0],colorPalette[color][1],colorPalette[color][2],SDL_ALPHA_OPAQUE);
     SDL_RenderDrawLine(gameRenderer,x1,y1,x2,y2);
 }
-void textured_line(){
-    // later
+void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clipMax, int clipMin, int textureZoom, int textureRow){
+    int ty1;
+    int ty2;
+    int shouldExit = 0;
+    for(int i = 0;i<textureZoom-1;i++){
+        ty1=y2-(((y2-y1)/textureZoom)*i);
+        ty2=y2-(((y2-y1)/textureZoom)*(i+1));
+        if(ty2>clipMax){
+            ty2 = clipMax;
+            shouldExit = 1;
+        }else if(ty2<clipMin){
+            ty2 = clipMin;
+            shouldExit = 1;
+        }
+        line(x1,ty1,x1,ty2,textureBuffer[textureRow][i]);
+        if(shouldExit==1){
+            break;
+        }
+    }
 }
 void quit(){
     SDL_DestroyWindow(gameWindow);

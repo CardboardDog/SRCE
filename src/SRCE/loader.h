@@ -139,6 +139,7 @@ void load_texture_set(int (*textureBuffer)[64][64], char* texture, char* texture
     int settingsOpen = 0;
     int scanY = 0;
     char beginLevelName[68] = "NAME ";
+    char* xxxxx;
     strcat(beginLevelName, textureSet); // NAME [level]
     while(fscanf(gameFile,"%68[^\n]\n",charBuffer)==1){
         if(strcmp(charBuffer,"TEXST:")==0){
@@ -154,8 +155,11 @@ void load_texture_set(int (*textureBuffer)[64][64], char* texture, char* texture
             if(strcmp(charBuffer,"END")==0){
                 break;
             }
-            if(strcmp(strtok(charBuffer," "),texture)){
-                load_texture(textureBuffer,strtok(NULL,""));
+            if(strcmp(strtok(charBuffer," "),texture)==0){
+                xxxxx = strtok(NULL,"");
+                printf("%s:",texture);
+                printf("%s\n",xxxxx);
+                load_texture(textureBuffer,xxxxx);
             }
         }
     }

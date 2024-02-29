@@ -1,13 +1,15 @@
 #include <SDL2/SDL.h>
+#include <stdio.h>
 #include <stdbool.h>
 SDL_Window* gameWindow;
-//SDL_Surface* windowSurface;
-SDL_Event displayEvents;
 SDL_Renderer* gameRenderer;
+Uint64 lastTime;
+double deltaTime;
+bool exited = false;
 int colorPalette[20][3] = {{0,0,0},{127,127,127},{136,0,21},{237,28,36},{255,127,39},{255,242,0},{34,177,76},{0,162,232},{63,72,204},{163,73,164},{255,255,255},{195,195,195},{185,122,87},{255,174,201},{255,201,14},{239,228,176},{181,230,29},{153,217,234},{112,146,190},{200,291,231}}; // note modify to use 1D arrays!
 int init_display(){
     gameWindow = SDL_CreateWindow("SRCE",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,300,200,SDL_WINDOW_SHOWN);
-    //windowSurface = SDL_GetWindowSurface(gameWindow);
+    lastTime = 0;
     gameRenderer = SDL_CreateRenderer(gameWindow,-1,SDL_RENDERER_ACCELERATED);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"1");
     if(gameRenderer == NULL){
@@ -16,12 +18,7 @@ int init_display(){
     return 0;
 }
 bool should_exit(){
-    while(SDL_PollEvent(&displayEvents)){
-        if(displayEvents.type == SDL_QUIT){
-            return true;
-        }
-    }
-    return false;
+    return exited;
 }
 void clear(){
     SDL_SetRenderDrawColor(gameRenderer,0x0,0x0,0x0,0xFF);
@@ -30,6 +27,8 @@ void clear(){
 void update(){
     SDL_RenderPresent(gameRenderer);
     SDL_UpdateWindowSurface(gameWindow);
+    deltaTime = (double)((double)(SDL_GetTicks64()-lastTime)/1000);
+    lastTime = SDL_GetTicks64();
 }
 void line(int x1, int y1, int x2, int y2, int color){
     SDL_SetRenderDrawColor(gameRenderer,colorPalette[color][0],colorPalette[color][1],colorPalette[color][2],SDL_ALPHA_OPAQUE);
@@ -39,7 +38,7 @@ void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clip
     int ty1;
     int ty2;
     int shouldExit = 0;
-    for(int i = 0;i<textureZoom-1;i++){
+    for(int i = 0; i < textureZoom-1; i++){
         ty1=y2-(((y2-y1)/textureZoom)*i);
         ty2=y2-(((y2-y1)/textureZoom)*(i+1));
         if(ty2>clipMax){

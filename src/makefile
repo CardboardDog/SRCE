@@ -4,7 +4,7 @@ WCC = gcc
 WCARG = -lmingw32 -lSDL2main -lSDL2
 #	Linux 
 LCC = wsl gcc
-LCARG = -lSDL2
+LCARG = -lSDL2 -lm
 #	universal
 ENTRY = Main
 OUT = ../bin

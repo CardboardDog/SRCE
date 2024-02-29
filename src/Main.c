@@ -19,6 +19,8 @@ int main(int argc, char* args[]){
     int stepY;
     int wallHit, side;
     int cellX, cellY;
+    double wallX;
+    int textureRow;
     int** level;
     int renderHeight, renderY1, renderY2;
     level = malloc(settings[0] * sizeof(*level));
@@ -81,15 +83,35 @@ int main(int argc, char* args[]){
             renderHeight = (int)(200/perpWallDistance);
             renderY1 = 100+(renderHeight/2);
             renderY2 = 100-(renderHeight/2);
-            if(side == 1){ //temporary solution
-                line(i,renderY1,i,renderY2,2);
+            if(side==0){
+                wallX = playerY+perpWallDistance*rayRotationY;
             }else{
-                line(i,renderY1,i,renderY2,3);
+                wallX = playerX+perpWallDistance*rayRotationX;
             }
-            //printf("RH:%d\n",renderHeight);
-            //printf("RY:%d\n",renderY1);
-            //printf("RY2:%d\n",renderY2);
-            //textured_stripe(wallType1,i,renderY1,renderY2,199,0,64,10);
+            wallX -= floor(wallX);
+            textureRow = (int)(wallX*64.0);
+            if(side == 0 && rayRotationX > 0){
+                textureRow = 64-textureRow-1;
+            }else if(side == 1 && rayRotationY < 0){
+                textureRow = 64-textureRow-1;
+            }
+            switch (level[cellX][cellY]){
+                case 1:
+                    textured_stripe(wallType1,i,renderY2,renderY1,199,0,64,textureRow,side);
+                    break;
+                case 2:
+                    textured_stripe(wallType2,i,renderY2,renderY1,199,0,64,textureRow,side);
+                    break;
+                case 3:
+                    textured_stripe(wallType3,i,renderY2,renderY1,199,0,64,textureRow,side);
+                    break;
+                case 4:
+                    textured_stripe(wallType4,i,renderY2,renderY1,199,0,64,textureRow,side);
+                    break;
+                default:
+                    textured_stripe(wallType5,i,renderY2,renderY1,199,0,64,textureRow,side);
+                    break;
+            }
         }
         move_player(&playerX,&playerY,&rotationX,&rotationY,&planeX,&planeY);
         update();

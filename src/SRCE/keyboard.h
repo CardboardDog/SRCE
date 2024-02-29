@@ -36,7 +36,6 @@ void move_player(double* playerX, double* playerY, double* rotationX, double* ro
             exited = true;
         }
     }
-    //printf("%d:%d\n",keyUp,keyDown);
     *playerX += (double)((*rotationX*((deltaTime*5)*(keyUp-keyDown))));
     *playerY += (double)((*rotationY*((deltaTime*5)*(keyUp-keyDown))));
     if(keyLeft == 1){

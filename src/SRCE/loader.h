@@ -1,7 +1,16 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <ctype.h>
 FILE* gameFile;
+int char_to_int(char character){
+    char digitBuffer[1] = {character};
+    if(isdigit((int)character)){
+        return (int)strtol(digitBuffer, NULL, 16);
+    }else{
+        return (int)75-character;
+    }
+}
 int load_level_block(char* level, int x, int y){
     gameFile = fopen(FILE_PATH,"r");
     char charBuffer[68];
@@ -27,7 +36,39 @@ int load_level_block(char* level, int x, int y){
                 fclose(gameFile);
                 char hexRetrieve[1];
                 hexRetrieve[0] = charBuffer[x];
-                return (int)strtol(hexRetrieve, NULL, 16);
+                return char_to_int(hexRetrieve[0]);
+            }scanY++;
+        }
+    }
+    fclose(gameFile);
+    return 0;
+}
+int load_height_block(char* level, int x, int y){
+    gameFile = fopen(FILE_PATH,"r");
+    char charBuffer[68];
+    int settingsOpen = 0;
+    int scanY = 0;
+    char beginLevelName[68] = "NAME ";
+    strcat(beginLevelName, level); // NAME [level]
+    while(fscanf(gameFile,"%68[^\n]\n",charBuffer)==1){
+        if(strcmp(charBuffer,"LBFER:")==0){
+            settingsOpen = 1;
+        }
+        if(settingsOpen==1 && strcmp(charBuffer,beginLevelName)==0){
+            settingsOpen = 2;
+        }
+        if(settingsOpen==2 && strcmp(charBuffer,"WHGHT:")==0){
+            settingsOpen = 3;
+            scanY = 0;
+        }else if(settingsOpen==3){
+            if(strcmp(charBuffer,"END")==0){
+                break;
+            }
+            if(scanY==y){
+                fclose(gameFile);
+                char hexRetrieve[1];
+                hexRetrieve[0] = charBuffer[x];
+                return char_to_int(hexRetrieve[0]);
             }scanY++;
         }
     }
@@ -111,7 +152,7 @@ int load_texture_pixel(char* level, int x, int y){
                 fclose(gameFile);
                 char hexRetrieve[1];
                 hexRetrieve[0] = charBuffer[x];
-                return (int)strtol(hexRetrieve, NULL, 16);
+                return char_to_int(hexRetrieve[0]);
             }scanY++;
         }
     }
@@ -125,6 +166,13 @@ void load_level(int **levelWalls, int* playerX, int* playerY, int levelWidth, in
         }
     }
     load_level_start("DEMO",playerX,playerY);
+}
+void load_height(int **levelWalls, int levelWidth, int levelHight, char* level){
+    for (int y = 0; y < levelWidth; y++){
+        for (int x = 0; x < levelHight; x++){
+            levelWalls[x][y] = load_height_block(level,x,y);
+        }
+    }
 }
 void load_texture(int (*textureBuffer)[64][64], char* texture){
     for (int y = 0; y < 64; y++){

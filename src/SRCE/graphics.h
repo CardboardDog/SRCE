@@ -48,14 +48,18 @@ void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clip
         ty2=(int)(y2-((double)((double)(y2-y1)/(double)textureZoom)*(i+1)));
         if(ty2>clipMax){
             ty2 = clipMax;
-        }else if(ty2<clipMin){
+        }
+        if(ty2<clipMin){
             ty2 = clipMin;
         }if(ty1>clipMax){
             ty1 = clipMax;
-        }else if(ty1<clipMin){
+        }
+        if(ty1<clipMin){
             ty1 = clipMin;
         }
-        line(x1,ty1,x1,ty2,textureBuffer[textureRow][i],(shaded==1)?1:2);
+        if((ty1-ty2)!=0){
+            line(x1,ty1,x1,ty2,textureBuffer[textureRow][i],(shaded==1)?1:2);
+        }
     }
 }
 void quit(){

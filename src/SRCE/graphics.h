@@ -43,7 +43,7 @@ void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clip
     int ty1;
     int ty2;
     int shouldExit = 0;
-    for(int i = 0; i < textureZoom-1; i++){
+    for(int i = 0; i < textureZoom; i++){
         ty1=(int)(y2-((double)((double)(y2-y1)/(double)textureZoom)*i));
         ty2=(int)(y2-((double)((double)(y2-y1)/(double)textureZoom)*(i+1)));
         if(ty2>clipMax){

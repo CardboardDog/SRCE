@@ -2,13 +2,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 FILE* gameFile;
 int char_to_int(char character){
     char digitBuffer[1] = {character};
     if(isdigit((int)character)){
         return (int)strtol(digitBuffer, NULL, 16);
     }else{
-        return (int)75-character;
+        return (int)abs(character-55);
     }
 }
 int load_level_block(char* level, int x, int y){
@@ -171,7 +172,9 @@ void load_height(int **levelWalls, int levelWidth, int levelHight, char* level){
     for (int y = 0; y < levelWidth; y++){
         for (int x = 0; x < levelHight; x++){
             levelWalls[x][y] = load_height_block(level,x,y);
+            printf("[%d]",levelWalls[x][y]);
         }
+        printf("\n");
     }
 }
 void load_texture(int (*textureBuffer)[64][64], char* texture){

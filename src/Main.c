@@ -9,7 +9,7 @@ int main(int argc, char *args[])
     int settings[2];
     load_settings(&settings[0], &settings[1]);
     int startX, startY;
-    double playerX, playerY;
+    double playerX, playerY, playerZ;
     double rotationX = -1, rotationY = 0;
     double planeX = 0, planeY = 0.66;
     double cameraX, rayRotationX, rayRotationY;
@@ -40,6 +40,7 @@ int main(int argc, char *args[])
     load_height(levelHeight, settings[0], settings[1], "DEMO");
     playerX = (double)startX;
     playerY = (double)startY;
+    playerZ = 0.0;
     int wallType1[64][64], wallType2[64][64],
         wallType3[64][64], wallType4[64][64], wallType5[64][64];
     auto_load_walls(&wallType1, &wallType2, &wallType3, &wallType4, &wallType5, "DEMOSET");
@@ -114,7 +115,9 @@ int main(int argc, char *args[])
                     }
                     renderHeight = (int)(200 / perpWallDistance);
                     renderY1 = 100 + (renderHeight / 2);
-                    renderY2 = (int)((double)renderY1 - (renderHeight / 4.0) * (double)levelHeight[cellX][cellY]);
+                    renderY2 = (int)((double)renderY1 - (double)(renderHeight / 4.0) * (double)(levelHeight[cellX][cellY]));
+                    renderY1 += (int)(((double)renderHeight / 4.0) * (playerZ+0.5));
+                    renderY2 += (int)(((double)renderHeight / 4.0) * (playerZ+0.5));
                     if (side == 0)
                     {
                         wallX = playerY + perpWallDistance * rayRotationY;
@@ -133,6 +136,7 @@ int main(int argc, char *args[])
                     {
                         textureRow = 64 - textureRow - 1;
                     }
+                    textured_stripe(wallType5, i, renderY2, renderY1, clipHeight, 0, 64, 3, 1);
                     switch (level[cellX][cellY])
                     {
                     case 1:
@@ -159,10 +163,38 @@ int main(int argc, char *args[])
                     {   
                         clipHeight = renderY2;
                     }
+                    double sideDistanceX1 = sideDistanceX;
+                    double sideDistanceY1 = sideDistanceY;
+                    double perpWallDistance1;
+                    // back faces
+                    if (sideDistanceX < sideDistanceY)
+                    {
+                        sideDistanceX1 += deltaDistanceX;
+                        perpWallDistance1 = sideDistanceX1 - deltaDistanceX;
+                    }
+                    else
+                    {
+                        sideDistanceY1 += deltaDistanceY;
+                        perpWallDistance1 = sideDistanceY1 - deltaDistanceY;
+                    }
+                    renderHeight = (int)(200 / perpWallDistance1);
+                    renderY1 = 100 + (renderHeight / 2);
+                    renderY2 = (int)((double)renderY1 - ((double)renderHeight / 4.0) * (double)(levelHeight[cellX][cellY]));
+                    renderY1 += (int)(((double)renderHeight / 4.0) * (playerZ+0.5));
+                    renderY2 += (int)(((double)renderHeight / 4.0) * (playerZ+0.5));
+                    textured_stripe(wallType5, i, renderY2, clipHeight, clipHeight, 0, 64, 3, 1);
+                    if (renderY2 < clipHeight)
+                    {   
+                        clipHeight = renderY2;
+                    }
+                    if (renderY1 < clipHeight)
+                    {   
+                        clipHeight = renderY1;
+                    }
                 }
             }
         }
-        move_player(&playerX, &playerY, &rotationX, &rotationY, &planeX, &planeY);
+        move_player(&playerX, &playerY, &playerZ, &rotationX, &rotationY, &planeX, &planeY, levelHeight);
         update();
     }
     quit();

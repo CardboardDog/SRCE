@@ -1,7 +1,7 @@
 #================== SETTINGS ==================#
 #	Windows Settings
 WCC = gcc
-WCARG = -lmingw32 -lSDL2main -lSDL2
+WCARG = -lmingw32 -lSDL2main -lSDL2 -Wall
 #	Linux 
 LCC = wsl gcc
 LCARG = -lSDL2 -lm

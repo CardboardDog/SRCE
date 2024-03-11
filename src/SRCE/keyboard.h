@@ -7,11 +7,9 @@ int keyDown;
 int keyLeft;
 int keyRight;
 int keySpace;
-double gravity;
-void move_player(double* playerX, double* playerY, double* playerZ, double* rotationX, double* rotationY, double* planeX, double* planeY, int** levelBuffer){
-    double oldRotationY;
+double gravity = 0;
+void move_player(double* playerX, double* playerY, double* playerZ, double* rotationX, double* rotationY, double* planeX, double* planeY, int** levelBuffer, int wSettings[2]){
     double oldRotationX;
-    double oldPlaneY;
     double oldPlaneX;
     while(SDL_PollEvent(&event)==1){
         if(event.type == SDL_KEYUP){
@@ -42,20 +40,22 @@ void move_player(double* playerX, double* playerY, double* playerZ, double* rota
             exited = true;
         }
     }
-    if(levelBuffer
-        [(int)(*playerX+(double)((*rotationX*((deltaTime*5)*(keyUp-keyDown)))))]
-        [(int)*playerY]-*playerZ<3){
-        *playerX += (double)((*rotationX*((deltaTime*5)*(keyUp-keyDown))));
-        
-    }if(levelBuffer
-        [(int)(*playerX)]
-        [(int)(*playerY+(double)((*rotationY*((deltaTime*5)*(keyUp-keyDown)))))]-*playerZ<3){
-        *playerY += (double)((*rotationY*((deltaTime*5)*(keyUp-keyDown))));
+    int checkBoxX = (int)(*playerX+(double)((*rotationX*((deltaTime*5)*(keyUp-keyDown)))));
+    int checkBoxY = (int)(*playerY+(double)((*rotationY*((deltaTime*5)*(keyUp-keyDown)))));
+    if(checkBoxX<wSettings[0] && checkBoxX>-1 && checkBoxY<wSettings[1] && checkBoxY>-1){
+        if(levelBuffer
+            [checkBoxX]
+            [(int)*playerY]-*playerZ<3){
+            *playerX += (double)((*rotationX*((deltaTime*5)*(keyUp-keyDown))));
+        }if(levelBuffer
+            [(int)(*playerX)]
+            [checkBoxY]-*playerZ<3){
+            *playerY += (double)((*rotationY*((deltaTime*5)*(keyUp-keyDown))));
+        }
     }
-    *playerZ += (double)((deltaTime*5)*(keySpace));
-    if(levelBuffer[(int)(*playerX)][(int)(*playerY)]>*playerZ){
-        *playerZ = levelBuffer[(int)(*playerX)][(int)(*playerY)];
-        gravity = 0;
+    if((double)(levelBuffer[(int)(*playerX)][(int)(*playerY)])>*playerZ){
+        *playerZ = (double)(levelBuffer[(int)(*playerX)][(int)(*playerY)]);
+        gravity = 0.0;
     }else if(*playerZ>levelBuffer[(int)(*playerX)][(int)(*playerY)]){
         gravity += deltaTime;
         *playerZ -= gravity;

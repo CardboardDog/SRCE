@@ -39,10 +39,14 @@ void line(int x1, int y1, int x2, int y2, int color, int divide){
     SDL_SetRenderDrawColor(gameRenderer,colorPalette[color][0]/divide,colorPalette[color][1]/divide,colorPalette[color][2]/divide,SDL_ALPHA_OPAQUE);
     SDL_RenderDrawLine(gameRenderer,x1,y1,x2,y2);
 }
+void set_pixel(int x, int y, int color, int divide){
+    SDL_SetRenderDrawColor(gameRenderer,colorPalette[color][0]/divide,colorPalette[color][1]/divide,colorPalette[color][2]/divide,SDL_ALPHA_OPAQUE);
+    if(x>0 && x<300 && y>0 && y<200){SDL_RenderDrawPoint(gameRenderer,x,y);}
+}
 void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clipMax, int clipMin, int textureZoom, int textureRow, int shaded){
     int ty1;
     int ty2;
-    int shouldExit = 0;
+    int textureY = 0;
     for(int i = 0; i < textureZoom; i++){
         ty1=(int)(y2-((double)((double)(y2-y1)/(double)textureZoom)*i));
         ty2=(int)(y2-((double)((double)(y2-y1)/(double)textureZoom)*(i+1)));
@@ -58,7 +62,11 @@ void textured_stripe(int textureBuffer[64][64], int x1, int y1, int y2, int clip
             ty1 = clipMin;
         }
         if((ty1-ty2)!=0){
-            line(x1,ty1,x1,ty2,textureBuffer[textureRow][i],(shaded==1)?1:2);
+            line(x1,ty1,x1,ty2,textureBuffer[textureRow][textureY],(shaded==1)?1:2);
+        }
+        textureY++;
+        if(textureY>63){
+            textureY = 0;
         }
     }
 }

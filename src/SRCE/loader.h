@@ -76,11 +76,42 @@ int load_height_block(char* level, int x, int y){
     fclose(gameFile);
     return 0;
 }
-void load_level_start(char* level, int* x, int* y){
+int load_floor_block(char* level, int x, int y){
     gameFile = fopen(FILE_PATH,"r");
     char charBuffer[68];
     int settingsOpen = 0;
     int scanY = 0;
+    char beginLevelName[68] = "NAME ";
+    strcat(beginLevelName, level); // NAME [level]
+    while(fscanf(gameFile,"%68[^\n]\n",charBuffer)==1){
+        if(strcmp(charBuffer,"LBFER:")==0){
+            settingsOpen = 1;
+        }
+        if(settingsOpen==1 && strcmp(charBuffer,beginLevelName)==0){
+            settingsOpen = 2;
+        }
+        if(settingsOpen==2 && strcmp(charBuffer,"FLTXT:")==0){
+            settingsOpen = 3;
+            scanY = 0;
+        }else if(settingsOpen==3){
+            if(strcmp(charBuffer,"END")==0){
+                break;
+            }
+            if(scanY==y){
+                fclose(gameFile);
+                char hexRetrieve[1];
+                hexRetrieve[0] = charBuffer[x];
+                return char_to_int(hexRetrieve[0]);
+            }scanY++;
+        }
+    }
+    fclose(gameFile);
+    return 0;
+}
+void load_level_start(char* level, int* x, int* y){
+    gameFile = fopen(FILE_PATH,"r");
+    char charBuffer[68];
+    int settingsOpen = 0;
     char beginLevelName[68] = "NAME ";
     strcat(beginLevelName, level); // NAME [level]
     while(fscanf(gameFile,"%68[^\n]\n",charBuffer)==1){
@@ -172,9 +203,14 @@ void load_height(int **levelWalls, int levelWidth, int levelHight, char* level){
     for (int y = 0; y < levelWidth; y++){
         for (int x = 0; x < levelHight; x++){
             levelWalls[x][y] = load_height_block(level,x,y);
-            printf("[%d]",levelWalls[x][y]);
         }
-        printf("\n");
+    }
+}
+void load_floors(int **levelFloors, int levelWidth, int levelHight, char* level){
+    for (int y = 0; y < levelWidth; y++){
+        for (int x = 0; x < levelHight; x++){
+            levelFloors[x][y] = load_floor_block(level,x,y);
+        }
     }
 }
 void load_texture(int (*textureBuffer)[64][64], char* texture){
@@ -188,7 +224,6 @@ void load_texture_set(int (*textureBuffer)[64][64], char* texture, char* texture
     gameFile = fopen(FILE_PATH,"r");
     char charBuffer[68];
     int settingsOpen = 0;
-    int scanY = 0;
     char beginLevelName[68] = "NAME ";
     char* xxxxx;
     strcat(beginLevelName, textureSet); // NAME [level]
@@ -201,7 +236,6 @@ void load_texture_set(int (*textureBuffer)[64][64], char* texture, char* texture
         }
         if(settingsOpen==2 && strcmp(charBuffer,"TEXPT:")==0){
             settingsOpen = 3;
-            scanY = 0;
         }else if(settingsOpen==3){
             if(strcmp(charBuffer,"END")==0){
                 break;

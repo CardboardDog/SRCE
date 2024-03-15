@@ -76,7 +76,7 @@ int load_height_block(char* level, int x, int y){
     fclose(gameFile);
     return 0;
 }
-int load_floor_block(char* level, int x, int y){
+int load_roof_block(char* level, int x, int y){
     gameFile = fopen(FILE_PATH,"r");
     char charBuffer[68];
     int settingsOpen = 0;
@@ -90,7 +90,7 @@ int load_floor_block(char* level, int x, int y){
         if(settingsOpen==1 && strcmp(charBuffer,beginLevelName)==0){
             settingsOpen = 2;
         }
-        if(settingsOpen==2 && strcmp(charBuffer,"FLTXT:")==0){
+        if(settingsOpen==2 && strcmp(charBuffer,"RHGHT:")==0){
             settingsOpen = 3;
             scanY = 0;
         }else if(settingsOpen==3){
@@ -191,25 +191,25 @@ int load_texture_pixel(char* level, int x, int y){
     fclose(gameFile);
     return 0;
 }
-void load_level(int **levelWalls, int* playerX, int* playerY, int levelWidth, int levelHight, char* level){
+void load_level(int **levelWalls, int* playerX, int* playerY, int levelWidth, int levelHeight, char* level){
     for (int y = 0; y < levelWidth; y++){
-        for (int x = 0; x < levelHight; x++){
+        for (int x = 0; x < levelHeight; x++){
             levelWalls[x][y] = load_level_block(level,x,y);
         }
     }
     load_level_start("DEMO",playerX,playerY);
 }
-void load_height(int **levelWalls, int levelWidth, int levelHight, char* level){
+void load_height(int **levelWalls, int levelWidth, int levelHeight, char* level){
     for (int y = 0; y < levelWidth; y++){
-        for (int x = 0; x < levelHight; x++){
+        for (int x = 0; x < levelHeight; x++){
             levelWalls[x][y] = load_height_block(level,x,y);
         }
     }
 }
-void load_floors(int **levelFloors, int levelWidth, int levelHight, char* level){
+void load_roofs(int **levelFloors, int levelWidth, int levelHeight, char* level){
     for (int y = 0; y < levelWidth; y++){
-        for (int x = 0; x < levelHight; x++){
-            levelFloors[x][y] = load_floor_block(level,x,y);
+        for (int x = 0; x < levelHeight; x++){
+            levelFloors[x][y] = load_roof_block(level,x,y);
         }
     }
 }

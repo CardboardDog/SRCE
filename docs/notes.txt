@@ -16,7 +16,7 @@ buffers:
 MBFER (Contains All Levels - Map Buffer)
 LBFER (A Level Buffer)
 LWALL (Level Wall Textures)
-FLTXT (Floor Textures)
+RHGHT (Roof Height)
 WHGHT (Wall Height)
 END (Closes The Buffer)
 SMODE (Game Settings)

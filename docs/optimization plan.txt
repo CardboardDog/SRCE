@@ -1,0 +1,7 @@
+optimization plan (from simplest to most complicated):
+1. use stack instead of heap for quick access
+2. use unsigned integers instead of signed when possible.
+3. use convert between variable types as little as possible.
+4. use less floats/doubles
+5. use less variables/memory
+6. use less math

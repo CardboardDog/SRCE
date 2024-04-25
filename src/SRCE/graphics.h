@@ -6,7 +6,7 @@ SDL_Renderer* gameRenderer;
 Uint64 lastTime;
 double deltaTime;
 bool exited = false;
-int colorPalette[20][3] = {{0,0,0},{127,127,127},{136,0,21},{237,28,36},{255,127,39},{255,242,0},{34,177,76},{0,162,232},{63,72,204},{163,73,164},{255,255,255},{195,195,195},{185,122,87},{255,174,201},{255,201,14},{239,228,176},{181,230,29},{153,217,234},{112,146,190},{200,291,231}}; // note modify to use 1D arrays!
+int colorPalette[20][3] = {{0,0,0},{127,127,127},{136,0,21},{237,28,36},{255,127,39},{255,242,0},{34,177,76},{0,162,232},{63,72,204},{163,73,164},{255,255,255},{195,195,195},{185,122,87},{255,174,201},{255,201,14},{239,228,176},{181,230,29},{153,217,234},{112,146,190},{200,255,231}}; // note modify to use 1D arrays!
 int init_display(){
     gameWindow = SDL_CreateWindow("SRCE",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,300,200,SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     lastTime = 0;
